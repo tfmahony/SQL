@@ -62,8 +62,17 @@ FROM fortune_companies
 WHERE healthcare_benefits=1 AND paid_time_off_days>=15;
 
 -- what is the average number of employees at a company for each industry type?
+SELECT industry, ROUND(AVG(employees)) AS average_employees
+FROM fortune_companies
+GROUP BY industry;
 
 -- list the industries in descending average company revenue
+SELECT industry, ROUND(AVG(revenue)) AS avg_company_revenue
+FROM fortune_companies
+GROUP BY industry
+ORDER BY avg_revenue desc;
+
+-- how many companies are in each type of industry?
 
 -- what company offers the most maternity leave?
 
