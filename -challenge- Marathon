@@ -1,0 +1,53 @@
+CREATE TABLE marathon (
+    ID INTEGER PRIMARY KEY,
+    participant_name TEXT,
+    completion_fraction REAL,
+    has_run_marathon INTEGER
+);
+
+INSERT INTO marathon (participant_name, completion_fraction, has_run_marathon)
+VALUES
+    ('Charlotte Chaze', 0.8534, 1),
+    ('Maria Rodriguez', 1.0000, 0),
+    ('Hassan Ali', 0.7065, 0),
+    ('Leila Kim', 0.9545, 1),
+    ('Javier Martinez', 0.8055, 0),
+    ('Fatima Ahmed', 0.6044, 1),
+    ('Priya Patel', 0.7564, 0),
+    ('Mohammed Rahman', 0.4032, 0),
+    ('Sara Nguyen', 0.9032, 1),
+    ('Rahul Sharma', 0.5513, 0);
+
+SELECT participant_name, completion_fraction*100 AS percent_completed
+FROM marathon;
+
+-- Without using ROUND
+SELECT participant_name
+,completion_fraction*100 as completion_percent
+FROM marathon
+WHERE participant_name="Charlotte Chaze";
+
+-- Using ROUND
+SELECT participant_name
+,ROUND(completion_fraction*100) as completion_percent
+FROM marathon
+WHERE participant_name="Charlotte Chaze";
+
+-- Using ROUND and specifying how many decimals you want in your result
+SELECT participant_name
+,ROUND(completion_fraction*100,1) as completion_percent
+FROM marathon
+WHERE participant_name="Charlotte Chaze";
+
+SELECT participant_name
+,ROUND(completion_fraction*100,1) AS percent_completed
+FROM marathon;
+
+SELECT COUNT(*),
+CASE WHEN completion_fraction>=0.75 THEN "75%+"
+WHEN completion_fraction>=.5 THEN "50%+"
+WHEN completion_fraction>=.25 THEN "25%+"
+ELSE "Under 25%"
+END AS "percent_achieved"
+FROM marathon
+GROUP BY percent_achieved;
