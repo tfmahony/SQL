@@ -1,0 +1,33 @@
+CREATE TABLE employees (
+    employee_id INTEGER PRIMARY KEY,
+    department TEXT,
+    salary DECIMAL(10, 2),
+    years_of_experience INTEGER
+);
+
+INSERT INTO employees (employee_id, department, salary, years_of_experience)
+VALUES
+    (1, 'Finance', 60000.00, 5),
+    (2, 'Marketing', 55000.00, 3),
+    (3, 'Sales', 75000.00, 8),
+    (4, 'Engineering', 80000.00, 7),
+    (5, 'HR', 50000.00, 2),
+    (6, 'Finance', 70000.00, 6),
+    (7, 'Marketing', 60000.00, 4),
+    (8, 'Sales', 85000.00, 10),
+    (9, 'Engineering', 90000.00, 9),
+    (10, 'HR', 55000.00, 3),
+    (11, 'Sales', 72000.00, 6),
+    (12, 'Sales', 80000.00, 7),
+    (13, 'Engineering', 85000.00, 8),
+    (14, 'Engineering', 92000.00, 10);
+
+SELECT department, SUM(salary) AS cost
+FROM employees
+GROUP BY department
+HAVING cost>=300000;
+
+SELECT department, AVG(salary) AS average_salary
+FROM employees
+GROUP BY department
+HAVING average_salary>=70000;
