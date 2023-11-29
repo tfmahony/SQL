@@ -1,0 +1,37 @@
+/* Create table about the people and what they do here */
+
+CREATE TABLE actors (id INTEGER PRIMARY KEY,
+    first_name TEXT,
+    last_name TEXT,
+    city TEXT);
+
+INSERT INTO actors (first_name, last_name, city)
+    VALUES ("Tom", "Cruise", "Los Angeles");
+INSERT INTO actors (first_name, last_name, city)
+    VALUES ("Katie", "Holmes", "Los Angeles");
+INSERT INTO actors (first_name, last_name, city)
+    VALUES ("Emily", "Blunt", "Los Angeles");
+INSERT INTO actors (first_name, last_name, city)
+    VALUES ("John", "Krasinski", "Los Angeles");
+    
+CREATE TABLE movies (id INTEGER PRIMARY KEY,
+    actor_id INTEGER,
+    title TEXT);
+    
+INSERT INTO movies (actor_id, title)
+    VALUES (1, "Top Gun");
+INSERT INTO movies (actor_id, title)
+    VALUES (2, "Batman Begins");
+INSERT INTO movies (actor_id, title)
+    VALUES (3, "A Quiet Place");
+INSERT INTO movies (actor_id, title)
+    VALUES (4, "A Quiet Place");
+    
+CREATE TABLE marriages (id INTEGER PRIMARY KEY,
+    actor1_id INTEGER,
+    actor2_id INTEGER);
+
+INSERT INTO marriages (actor1_id, actor2_id)
+    VALUES(1, 2);
+INSERT INTO marriages (actor1_id, actor2_id)
+    VALUES(3, 4)
