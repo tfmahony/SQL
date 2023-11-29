@@ -13,6 +13,10 @@ INSERT INTO actors (first_name, last_name, city)
     VALUES ("Emily", "Blunt", "Los Angeles");
 INSERT INTO actors (first_name, last_name, city)
     VALUES ("John", "Krasinski", "Los Angeles");
+INSERT INTO actors (first_name, last_name, city)
+    VALUES ("Matt", "Damon", "Los Angeles");
+INSERT INTO actors (first_name, last_name, city)
+    VALUES ("Jennifer", "Aniston", "Los Angeles");
     
 CREATE TABLE movies (id INTEGER PRIMARY KEY,
     actor_id INTEGER,
@@ -26,7 +30,11 @@ INSERT INTO movies (actor_id, title)
     VALUES (3, "A Quiet Place");
 INSERT INTO movies (actor_id, title)
     VALUES (4, "A Quiet Place");
-    
+INSERT INTO movies (actor_id, title)
+    VALUES (5, "The Bourne Identity");
+INSERT INTO movies (actor_id, title)
+    VALUES (6, "Office Space");
+
 CREATE TABLE marriages (id INTEGER PRIMARY KEY,
     actor1_id INTEGER,
     actor2_id INTEGER);
@@ -34,7 +42,7 @@ CREATE TABLE marriages (id INTEGER PRIMARY KEY,
 INSERT INTO marriages (actor1_id, actor2_id)
     VALUES(1, 2);
 INSERT INTO marriages (actor1_id, actor2_id)
-    VALUES(3, 4)
+    VALUES(3, 4);
 
 
 -- show which pairs of actors are married to each other who have been in the same film together
