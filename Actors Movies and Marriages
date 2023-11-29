@@ -35,3 +35,13 @@ INSERT INTO marriages (actor1_id, actor2_id)
     VALUES(1, 2);
 INSERT INTO marriages (actor1_id, actor2_id)
     VALUES(3, 4)
+
+
+-- show which pairs of actors are married to each other who have been in the same film together
+
+SELECT a.first_name, a.last_name, b.first_name, b.last_name
+FROM marriages
+JOIN actors a
+ON marriages.actor1_id=a.id
+JOIN actors b
+ON marriages.actor2_id=b.id;
