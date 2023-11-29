@@ -83,4 +83,10 @@ ORDER BY company_count desc;
 SELECT company_name, MAX(maternity_leave_weeks) AS maternity_weeks_offered
 FROM fortune_companies;
 
--- categorize employee general happiness into "happy," "average," or "unhappy" based on average tenure
+-- assign each company a general happiness score of "happy," "average," or "unhappy" based on average tenure
+SELECT company_name
+,CASE WHEN avg_employee_tenure>=7 THEN "happy"
+WHEN avg_employee_tenure>=5 THEN "average"
+ELSE "unhappy"
+END AS "happiness"
+FROM fortune_companies;
