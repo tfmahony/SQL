@@ -72,8 +72,15 @@ FROM fortune_companies
 GROUP BY industry
 ORDER BY avg_revenue desc;
 
--- how many companies are in each type of industry?
+-- what industries have at least 5 companies represented?
+SELECT industry, COUNT(*) AS company_count
+FROM fortune_companies
+GROUP BY industry
+HAVING company_count>=5
+ORDER BY company_count desc;
 
--- what company offers the most maternity leave?
+-- what company offers the most maternity leave and how many weeks are offered?
+SELECT company_name, MAX(maternity_leave_weeks) AS maternity_weeks_offered
+FROM fortune_companies;
 
 -- categorize employee general happiness into "happy," "average," or "unhappy" based on average tenure
