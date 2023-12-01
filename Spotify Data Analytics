@@ -75,3 +75,28 @@ FROM Spotifydata
 GROUP BY tempo_type;
 
 -- Interesting! It seems that high tempo songs yield higher average popularity by about 5 points across this set of data.
+
+-- Calculate the average popularity for the artists in the Spotify data table. Then, for every artist with an average popularity of 90 or above, show their name, their average popularity, and label them as a “Top Star”
+
+WITH artist_popularity AS (
+SELECT artist_name, avg(popularity) as average_popularity
+FROM Spotifydata
+GROUP BY artist_name
+)
+SELECT artist_name, average_popularity,
+CASE WHEN average_popularity>=90 THEN "Top Star"
+ELSE "No Star For You"
+END AS "Gold Star?"
+FROM artist_popularity
+ORDER BY average_popularity desc;
+
+-- Or, by using a tag
+
+WITH artist_popularity AS (
+SELECT artist_name, avg(popularity) as average_popularity
+FROM Spotifydata
+GROUP BY artist_name
+)
+SELECT artist_name, average_popularity, 'Top Star' AS tag
+FROM artist_popularity
+WHERE average_popularity>=90;
