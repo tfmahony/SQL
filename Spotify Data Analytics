@@ -1,0 +1,77 @@
+CREATE TABLE BIT_DB.Spotifydata (
+id integer PRIMARY KEY,
+artist_name varchar NOT NULL,
+track_name varchar NOT NULL,
+track_id varchar NOT NULL,
+popularity integer NOT NULL,
+danceability decimal(4,3) NOT NULL,
+energy decimal(4,3) NOT NULL,
+song_key integer NOT NULL,
+loudness decimal(5,3) NOT NULL,
+song_mode integer NOT NULL,
+speechiness decimal(5,4) NOT NULL,
+acousticness decimal(6,5) NOT NULL,
+instrumentalness decimal(8,7) NOT NULL,
+liveness decimal(5,4) NOT NULL,
+valence decimal(4,3) NOT NULL,
+tempo decimal(6,3) NOT NULL,
+duration_ms integer NOT NULL,
+time_signature integer NOT NULL );
+
+SELECT * FROM Spotifydata;
+
+-- Which artist released the shortest song and what was it called? Display the answer in seconds.
+
+SELECT track_name, duration_ms/1000 as duration_in_seconds
+FROM Spotifydata
+ORDER BY duration_in_seconds asc
+LIMIT 1;
+
+-- Which artists have more than one song in the top 50 and how many do they each have?
+
+SELECT artist_name, count(artist_name) as songs_in_top_50
+FROM Spotifydata
+GROUP BY artist_name
+HAVING songs_in_top_50>=2
+ORDER BY songs_in_top_50 desc;
+
+-- What is the average tempo by artist?
+
+SELECT artist_name, avg(tempo) avg_tempo
+FROM Spotifydata
+GROUP BY artist_name
+ORDER BY avg_tempo asc;
+
+-- To help check the above, how many unique artists are included in the top 50?
+
+SELECT count(distinct artist_name)
+FROM Spotifydata;
+
+-- Create a metric called "power" that combines danceability with energy. List the top 5 power tracks and their artist.
+
+SELECT artist_name, track_name, danceability+energy as power
+FROM Spotifydata
+ORDER BY power desc
+LIMIT 5;
+
+-- Does the popularity relate to energy?... Create a case to find the average energy of songs with popularity less than 80, between 80 and 90, and over 90.
+
+SELECT CASE WHEN popularity >=90  THEN "very_popular"
+WHEN popularity >=80 THEN "somewhat_popular"
+ELSE "not_as_popular"
+END AS "popularity_scale",
+round(avg(energy), 3) as energy
+FROM Spotifydata
+GROUP BY popularity_scale;
+
+-- What about tempo affecting popularity?
+
+SELECT CASE WHEN tempo >=150  THEN "high_tempo"
+WHEN tempo >=100 THEN "medium_tempo"
+ELSE "slower_tempo"
+END AS "tempo_type",
+round(avg(popularity), 1) as popularity_avg
+FROM Spotifydata
+GROUP BY tempo_type;
+
+-- Interesting! It seems that high tempo songs yield higher average popularity by about 5 points across this set of data.
