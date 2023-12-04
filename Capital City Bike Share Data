@@ -1,0 +1,27 @@
+-- In this exercise, I imported data from Washington's Capital Bikeshare program to analyze
+
+CREATE TABLE BIT_DB.CapBikeShare_Aug2023 (
+ride_id varchar,
+rideable_type varchar not null,
+started_at timestamp not null,
+ended_at timestamp not null,
+start_station_name varchar not null,
+start_station_id varchar not null,
+end_station_name varchar not null,
+end_station_id varchar not null,
+start_lat decimal(8,10) not null,
+start_lng decimal(8,10) not null,
+end_lat decimal(8,10) not null,
+end_lng decimal(8,10) not null,
+member_casual varchar not null);
+
+SELECT *
+FROM CapBikeShare_Aug2023
+LIMIT 50;
+
+-- It would be useful to have the duration of each ride in minutes
+
+SELECT ride_id, start_station_name, end_station_name,
+    ROUND((JULIANDAY(ended_at) - JULIANDAY(started_at)) * 1440) AS duration_minutes
+FROM CapBikeShare_Aug2023
+LIMIT 50;
