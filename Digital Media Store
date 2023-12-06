@@ -158,3 +158,20 @@ GROUP BY albums.Title)
 SELECT round(AVG(tracks_on_album)) as average
 FROM album_tracks
 WHERE tracks_on_album>1;
+
+-- Which tracks appear on the most playlists? Order by the number of playlists descending.
+
+SELECT tracks.Name, COUNT(playlist_track.TrackId) as count
+FROM playlist_track
+JOIN tracks ON playlist_track.TrackId=tracks.TrackId
+GROUP BY tracks.Name
+ORDER BY count desc;
+
+-- What is the count of tracks sold in each genre?
+
+SELECT genres.Name as genre, count(invoice_items.TrackId) as quantity
+FROM tracks
+JOIN genres ON genres.GenreId=tracks.GenreId
+JOIN invoice_items ON tracks.TrackId=invoice_items.TrackId
+GROUP BY tracks.GenreId
+ORDER BY quantity desc;
