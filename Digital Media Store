@@ -1,0 +1,160 @@
+-- Show Customers (their full names, customer ID, and country) who are in the US and Canada.
+
+SELECT customers.FirstName, customers.LastName, customers.CustomerId, customers.Country
+FROM chinook.customers
+WHERE Country IN ('USA','Canada');
+
+-- Show only the Customers from Germany.
+
+SELECT customers.FirstName, customers.LastName, customers.CustomerId, customers.Country
+FROM chinook.customers
+WHERE Country ='Germany';
+
+-- Show amount of customers from each country as a percentage of total customers.
+
+WITH count_by_country AS(
+SELECT customers.Country, COUNT(customers.Country) as count,
+CAST(SUM(COUNT(customers.CustomerId)) OVER () AS REAL) AS total
+FROM customers
+GROUP BY customers.Country)
+
+SELECT count_by_country.Country, count, ROUND(count*100/total, 1) as percentage
+FROM count_by_country;
+
+-- Or, it can be done with 2 CTEs
+
+WITH count_by_country AS (
+SELECT customers.Country, COUNT(customers.CustomerId) AS count
+FROM customers
+GROUP BY customers.Country),
+
+total_orders AS (
+SELECT COUNT(CustomerId) AS total
+FROM customers)
+
+SELECT count_by_country.Country, count_by_country.count,
+ROUND(count_by_country.count * 100.0 / total_orders.total, 1) AS percentage
+FROM count_by_country, total_orders;
+
+-- Find the Invoices of customers who are from Germany. The resulting table should show the customer's full name, Invoice ID, Date of the invoice, and billing country.
+
+SELECT customers.FirstName || ' ' || customers.LastName as full_name, invoices.InvoiceId, invoices.InvoiceDate, invoices.BillingCountry
+FROM invoices
+JOIN customers
+ON invoices.CustomerId=customers.CustomerId
+WHERE customers.Country='Germany';
+
+-- Find a unique/distinct list of billing countries from the Invoice table.
+
+SELECT DISTINCT invoices.BillingCountry
+FROM invoices
+ORDER BY invoices.BillingCountry;
+
+-- Provide a query that shows the invoices associated with each sales agent. The resulting table should include the Sales Agent's full name.
+
+SELECT invoices.InvoiceId, employees.FirstName || ' ' || employees.LastName as sales_agent
+FROM customers
+JOIN invoices ON invoices.CustomerId=customers.CustomerId
+JOIN employees ON customers.SupportRepId=employees.EmployeeId;
+
+
+-- Show the Invoice Total, Customer name, Country, and Sales Agent name for all invoices and customers.
+
+SELECT invoices.InvoiceId, invoices.Total, customers.FirstName || ' ' || customers.LastName as customer_name,
+employees.FirstName || ' ' || employees.LastName as sales_agent
+FROM customers
+JOIN invoices ON invoices.CustomerId=customers.CustomerId
+JOIN employees ON customers.SupportRepId=employees.EmployeeId;
+
+-- What was the total purchase amount associated with each sales agent?
+
+WITH employee_sales AS (
+SELECT invoices.Total as total_sale, invoices.Total, customers.FirstName || ' ' || customers.LastName as customer_name,
+employees.FirstName || ' ' || employees.LastName as sales_agent
+FROM invoices
+JOIN customers ON invoices.CustomerId=customers.CustomerId
+JOIN employees ON customers.SupportRepId=employees.EmployeeId
+WHERE invoices.Total>0)
+
+SELECT sales_agent, round(sum(total_sale), 2) as sales_by_employee
+FROM employee_sales
+GROUP BY sales_agent;
+
+-- How many Invoices were there in 2009?
+
+SELECT count(invoices.InvoiceDate) as invoice_count_2009
+FROM invoices
+WHERE InvoiceDate LIKE '2009%';
+
+-- What are the total sales for 2009?
+
+SELECT round(SUM(Total), 2)
+FROM invoices
+WHERE InvoiceDate LIKE '2009%';
+
+-- Put the total sales of 2009 and 2010 next to each other and caculate total sales of each
+
+WITH sales_2009 AS (
+SELECT SUM(Total) as total_2009
+FROM invoices
+WHERE InvoiceDate LIKE '2009%'),
+
+sales_2010 AS (
+SELECT SUM(Total) as total_2010
+FROM invoices
+WHERE InvoiceDate LIKE '2010%')
+
+SELECT round(total_2009, 2), round(total_2010, 2)
+FROM sales_2009, sales_2010;
+
+-- Write a query that includes the purchased track name with each invoice line ID.
+
+SELECT invoice_items.InvoiceLineId, tracks.name as track_name
+FROM invoice_items
+JOIN tracks ON tracks.TrackId=invoice_items.TrackId;
+
+-- Write a query that includes the purchased track name AND artist name with each invoice line ID.
+
+SELECT invoice_items.InvoiceLineId, tracks.Composer as artist, tracks.name as track_name
+FROM invoice_items
+JOIN tracks ON tracks.TrackId=invoice_items.TrackId;
+
+-- How many tracks did each artist sell? Do not include results if the artist is NULL and list results with the highest selling artists at the top.
+
+SELECT tracks.Composer as artist, count(invoice_items.InvoiceLineId) as tracks_sold
+FROM invoice_items
+JOIN tracks ON tracks.TrackId=invoice_items.TrackId
+WHERE tracks.Composer NOT NULL
+GROUP BY tracks.Composer
+ORDER BY tracks_sold desc;
+
+-- Provide a query that shows all the Tracks, and include the Album name, Media type, and Genre.
+
+SELECT tracks.Name as name,
+    tracks.Composer as artist,
+    albums.Title as album_name,
+    genres.Name as genre,
+    media_types.Name as media_type
+FROM tracks
+FULL JOIN albums ON tracks.AlbumId=albums.AlbumId
+FULL JOIN media_types ON media_types.MediaTypeId=tracks.MediaTypeId
+FULL JOIN genres ON genres.GenreId=tracks.GenreId;
+
+-- Show how many tracks are on each album
+
+SELECT albums.Title, count(tracks.AlbumId)
+FROM tracks
+FULL JOIN albums ON tracks.AlbumId=albums.AlbumId
+GROUP BY albums.Title;
+
+-- What's the average number of tracks on each album? Exclude albums with only 1 track.
+
+WITH album_tracks AS (
+SELECT albums.Title, count(tracks.AlbumId) as tracks_on_album
+FROM tracks
+FULL JOIN albums ON tracks.AlbumId=albums.AlbumId
+GROUP BY albums.Title)
+
+SELECT round(AVG(tracks_on_album)) as average
+FROM album_tracks
+WHERE tracks_on_album>1;
