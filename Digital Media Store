@@ -1,5 +1,18 @@
 --In this project, I look into the sales records of a digital media store for insights about the customers and tracks purchased.
 
+--I utilized a digital media store database with 11 tables:
+    albums
+    artists
+    customers
+    employees
+    genres
+    invoice_items
+    invoices
+    media_types
+    playlist_track
+    playlists
+    tracks
+
 --Show Customers (their full names, customer ID, and country) who are in the US and Canada.
 
     SELECT customers.FirstName, customers.LastName, customers.CustomerId, customers.Country
