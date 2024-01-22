@@ -1,0 +1,15 @@
+-- First, let's create each table.
+
+  CREATE TABLE target (
+      id INT,
+      val VARCHAR(1)
+  );
+
+  INSERT INTO your_table_name (id, val) VALUES
+  (1, 'A'),
+  (2, 'A'),
+  (3, NULL),
+  (5, 'A'),
+  (8, 'A'),
+  (9, NULL),
+  (10, NULL);
