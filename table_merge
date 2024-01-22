@@ -63,6 +63,64 @@
   FROM source
   WHERE update_override.id = source.id AND source.val IS NOT NULL;
 
--- MERGE TABLE
+-- MERGE TABLE. The merge is similar to the update, but I add an extra step to insert rows from the source where the id does not already exist in the merged table.
 
+  CREATE TABLE merge_table AS
+  SELECT *
+  FROM target;
 
+  UPDATE merge_table
+  SET val = source.val
+  FROM source
+  WHERE merge_table.id = source.id;
+
+  INSERT INTO merge_table (id, val)
+  SELECT
+      source.id,
+      source.val
+  FROM
+      source
+  WHERE
+      source.id NOT IN (SELECT id FROM merge_table);
+
+-- MERGE NULL FILL. The process for this is similar to the update null fill, except with the added step of adding rows that don't already exist in the merged table.
+
+  CREATE TABLE merge_null_fill AS
+  SELECT *
+  FROM target;
+
+  UPDATE merge_null_fill
+  SET val = source.val
+  FROM source
+  WHERE merge_null_fill.id = source.id AND merge_null_fill.val IS NULL and source.val IS NOT NULL;
+
+  INSERT INTO merge_null_fill (id, val)
+  SELECT
+      source.id,
+      source.val
+  FROM
+      source
+  WHERE
+      source.id NOT IN (SELECT id FROM merge_null_fill);
+
+-- MERGE OVRERIDE. Again, very similar to the update override except we need to add the extra rows from the source that don't already exist in the merged table.
+
+  CREATE TABLE merge_override AS
+  SELECT *
+  FROM target;
+
+  UPDATE merge_override
+  SET val = source.val
+  FROM source
+  WHERE merge_override.id = source.id AND source.val IS NOT NULL;
+
+  INSERT INTO merge_override (id, val)
+  SELECT
+      source.id,
+      source.val
+  FROM
+      source
+  WHERE
+      source.id NOT IN (SELECT id FROM merge_override);
+
+-- APPEND. 
