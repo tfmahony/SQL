@@ -52,5 +52,17 @@
   FROM source
   WHERE update_null_fill.id = source.id AND update_null_fill.val IS NULL AND source.val IS NOT NULL;
 
--- UPDATE OVERRIDE
+-- UPDATE OVERRIDE. This is a very similar command to the previous, except this time I specify that values are only updated if the source value is not NULL.
+
+  CREATE TABLE update_override AS
+  SELECT *
+  FROM target;
+
+  UPDATE update_override
+  SET val = source.val
+  FROM source
+  WHERE update_override.id = source.id AND source.val IS NOT NULL;
+
+-- MERGE TABLE
+
 
