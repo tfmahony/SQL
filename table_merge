@@ -30,22 +30,27 @@
 
 -- Now, we need to use SQL to create each result table.
 
--- UPDATE TABLE
+-- UPDATE TABLE. I create a destination table based on the target table and then use the UPDATE command.
 
   CREATE TABLE update_table AS
   SELECT *
   FROM target;
 
-  -- Update values in update_table based on source
   UPDATE update_table
   SET val = source.val
   FROM source
   WHERE update_table.id = source.id;
 
-  -- Update val=NULL in update_table where source has NULL value
-  UPDATE update_table
-  SET val = NULL
-  WHERE update_table.id IN (SELECT id FROM source WHERE val IS NULL);
+-- UPDATE NULL FILL. I use a similar UPDATE command, but I only have the NULL values updated as specified in the WHERE statement.
 
--- MERGE TABLE
+  CREATE TABLE update_null_fill AS
+  SELECT *
+  FROM target;
+
+  UPDATE update_null_fill
+  SET val = source.val
+  FROM source
+  WHERE update_null_fill.id = source.id AND update_null_fill.val IS NULL AND source.val IS NOT NULL;
+
+-- UPDATE OVERRIDE
 
