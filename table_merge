@@ -1,11 +1,11 @@
--- First, let's create each table.
+-- First, let's create each table and insert the values in them.
 
   CREATE TABLE target (
       id INT,
       val VARCHAR(1)
   );
 
-  INSERT INTO your_table_name (id, val) VALUES
+  INSERT INTO target (id, val) VALUES
   (1, 'A'),
   (2, 'A'),
   (3, NULL),
@@ -13,3 +13,39 @@
   (8, 'A'),
   (9, NULL),
   (10, NULL);
+
+  CREATE TABLE source (
+      id INT,
+      val VARCHAR(1)
+  );
+
+  INSERT INTO source (id, val) VALUES
+  (1, NULL),
+  (2, 'B'),
+  (4, 'B'),
+  (8, 'B'),
+  (9, 'B'),
+  (10, NULL),
+  (11, NULL);
+
+-- Now, we need to use SQL to create each result table.
+
+-- UPDATE TABLE
+
+  CREATE TABLE update_table AS
+  SELECT *
+  FROM target;
+
+  -- Update values in update_table based on source
+  UPDATE update_table
+  SET val = source.val
+  FROM source
+  WHERE update_table.id = source.id;
+
+  -- Update val=NULL in update_table where source has NULL value
+  UPDATE update_table
+  SET val = NULL
+  WHERE update_table.id IN (SELECT id FROM source WHERE val IS NULL);
+
+-- MERGE TABLE
+
